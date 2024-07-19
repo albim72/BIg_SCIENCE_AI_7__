@@ -3,7 +3,7 @@ import heapq
 def gready_best_first_search(graph,start,goal,h):
     #inicjalizacja kopca
     frontier = []
-    heapq.heappush(frontier,(h(start,goal)),start)
+    heapq.heappush(frontier,(h(start,goal),start))
 
     #słownik przechowujący informację skąd przyszliśmy do danego węzła
     came_from = {}
@@ -22,6 +22,13 @@ def gready_best_first_search(graph,start,goal,h):
             path.reverse()
             return path
 
+        #przeglądanie sąsiadów bieżącego węzła
+        for neighbour in graph[current]:
+            if neighbour not in came_from:
+                priority = h(neighbour,goal)
+                heapq.heappush(frontier,(priority,neighbour))
+                came_from[neighbour] = current
+
     return None
 
 def heuristic(a,b):
@@ -38,3 +45,8 @@ graph = {
     (1, 1): {(1, 0): 1, (0, 1): 1, (2, 2): 1},
     (2, 2): {}
 }
+
+start = (0,0)
+goal = (2,2)
+path = gready_best_first_search(graph,start,goal,heuristic)
+print(f'Path: {path}')
